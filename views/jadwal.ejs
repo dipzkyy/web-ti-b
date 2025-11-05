@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/animations.css">
+    <style>
+        .jadwal-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 2rem;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #00bfff, #0080ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #bfefff;
+        }
+
+        .jadwal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .hari-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: staggerEntry 0.6s ease forwards;
+        }
+
+        .hari-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 1rem;
+            padding: 2px;
+            background: linear-gradient(45deg, #00bfff, #0080ff, #00bfff);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.7;
+        }
+
+        .hari-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 191, 255, 0.3);
+        }
+
+        .hari-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            text-align: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(0, 191, 255, 0.3);
+        }
+
+        .matkul-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .matkul-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .matkul-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
+        }
+
+        .matkul-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .matkul-nama {
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .matkul-detail {
+            color: #bfefff;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .matkul-waktu {
+            background: rgba(0, 191, 255, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+        }
+
+        @keyframes staggerEntry {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .jadwal-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .matkul-detail {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Stars Background -->
+    <canvas id="particles-js"></canvas>
+    
+    <div class="aurora"></div>
+
+    <main class="page-entrance">
+        <div class="jadwal-container">
+            <!-- Tombol Back -->
+            <a href="/home" class="back-button">
+                ← Kembali ke Beranda
+            </a>
+
+            <div class="page-header">
+                <h1 class="page-title">📅 Jadwal Kuliah</h1>
+                <p class="page-subtitle">Jadwal perkuliahan kelas TI B UNISBA Blitar</p>
+            </div>
+            
+            <div class="jadwal-grid">
+                <% 
+                // Kelompokkan jadwal berdasarkan hari
+                const jadwalByHari = {};
+                jadwal.forEach(item => {
+                    if (!jadwalByHari[item.hari]) {
+                        jadwalByHari[item.hari] = [];
+                    }
+                    jadwalByHari[item.hari].push(item);
+                });
+                %>
+                
+                <% Object.keys(jadwalByHari).forEach((hari, index) => { %>
+                    <div class="hari-card" data-index="<%= index %>">
+                        <h2 class="hari-title"><%= hari %></h2>
+                        <ul class="matkul-list">
+                            <% jadwalByHari[hari].forEach((matkul, matkulIndex) => { %>
+                                <li class="matkul-item">
+                                    <div class="matkul-nama"><%= matkul.mataKuliah %></div>
+                                    <div class="matkul-detail">
+                                        <span>🏫 <%= matkul.ruang %></span>
+                                        <span class="matkul-waktu">🕐 <%= matkul.waktu %></span>
+                                    </div>
+                                </li>
+                            <% }) %>
+                        </ul>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2025 TI B UNISBA Blitar — All Rights Reserved.</p>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script src="/js/particles.js"></script>
+    
+    <script>
+        // Stagger animation for cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const hariCards = document.querySelectorAll('.hari-card');
+            hariCards.forEach((card, index) => {
+                // Set animation delay berdasarkan data-index
+                const delay = index * 0.1;
+                card.style.animationDelay = delay + 's';
+            });
+        });
+    </script>
+</body>
+</html>

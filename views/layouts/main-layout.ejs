@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title || 'TI B UNISBA Blitar' %></title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/animations.css">
+</head>
+<body>
+    <!-- Hanya include nav-footer jika bukan loading page -->
+    <% if (typeof activePage !== 'undefined') { %>
+        <%- include('nav-footer', {activePage: activePage}) %>
+    <% } %>
+    
+    <div class="aurora"></div>
+
+    <main>
+        <%- body %>
+    </main>
+
+    <script src="/js/app.js"></script>
+    <script src="/js/particles.js"></script>
+    <% if (scripts) { %>
+        <% scripts.forEach(script => { %>
+            <script src="<%= script %>"></script>
+        <% }) %>
+    <% } %>
+</body>
+</html>

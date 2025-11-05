@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/animations.css">
+</head>
+<body>
+    <nav class="nav-main scroll-element">
+        <ul>
+            <li><a href="#hero" class="nav-link active">Beranda</a></li>
+            <li><a href="#interactive-menu" class="nav-link">Menu</a></li>
+            <li><a href="#visi-misi" class="nav-link">Visi Misi</a></li>
+        </ul>
+        <span id="current-date"></span>
+    </nav>
+
+    <canvas id="particles-js"></canvas>
+
+    <div class="aurora"></div>
+
+    <section id="hero" class="page-section">
+        <div class="section-content">
+            <div class="hero-grid">
+                <div class="hero-left">
+                    <div class="logo-group scroll-element">
+                        <img src="/assets/images/logokelas.png" alt="Logo Kelas" class="logo hover-glow">
+                        <img src="/assets/images/kampus.png" alt="Logo Kampus" class="logo hover-glow">
+                    </div>
+                    
+                    <div class="title-group">
+                        <h1 class="main-title scroll-element">
+                            <span class="title-line">TI</span>
+                            <span class="title-line">B</span>
+                        </h1>
+                        
+                        <h2 class="subtitle scroll-element">TI B UNISBA BLITAR</h2>
+                        
+                        <a href="https://www.instagram.com/whois_inf_enginering1b/" target="_blank" class="instagram-button scroll-element">
+                            <span class="instagram-logo">📷</span>
+                            <span class="instagram-text">Instagram</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="hero-right scroll-element">
+                    <div class="typewriter-container">
+                        <p id="typewriterText"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="interactive-menu" class="page-section">
+        <div class="section-content">
+            <div class="circle-menu-container scroll-element">
+                <div id="circleMenu" class="circle-menu">
+                    <span>Klik Saya</span>
+                    <div class="menu-buttons">
+                        <a href="/anggota" class="menu-btn">👥 Anggota</a>
+                        <a href="/galeri" class="menu-btn">🖼️ Galeri</a>
+                        <a href="/jadwal" class="menu-btn">📅 Jadwal</a>
+                        <a href="https://unisba-blitar.ac.id" target="_blank" class="menu-btn">🌐 Kampus</a>
+                    </div>
+                </div>
+                <div class="ripple-effect"></div>
+            </div>
+            <p class="menu-instruction scroll-element">Tekan lingkaran untuk membuka menu navigasi</p>
+        </div>
+    </section>
+
+    <section id="visi-misi" class="page-section">
+        <div class="section-content">
+            <div class="cards-grid">
+                <div class="card-glow scroll-element">
+                    <div class="card-content">
+                        <h3>🎯 Visi</h3>
+                        <p>Mewujudkan generasi TI B yang unggul, kreatif, dan berintegritas dalam pengembangan teknologi informasi.</p>
+                    </div>
+                </div>
+                
+                <div class="card-glow scroll-element">
+                    <div class="card-content">
+                        <h3>🚀 Misi</h3>
+                        <p>Menumbuhkan semangat kolaborasi, inovasi, dan pembelajaran berbasis proyek nyata untuk memecahkan masalah dunia nyata.</p>
+                    </div>
+                </div>
+                
+                <div class="card-glow scroll-element">
+                    <div class="card-content">
+                        <h3>💡 Slogan</h3>
+                        <p>"Coding with Heart, Innovate with Mind, Create with Passion."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer scroll-element">
+        <p>© 2025 TI B UNISBA Blitar — All Rights Reserved.</p>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script src="/js/particles.js"></script>
+    <script src="/js/components/navigation.js"></script>
+    <script src="/js/pages/home.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new CircleMenu('circleMenu');
+            
+            // Scroll animation dengan auto refresh
+            const scrollElements = document.querySelectorAll('.scroll-element');
+            const elementObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    } else {
+                        // Auto refresh - reset animation ketika keluar viewport
+                        entry.target.classList.remove('visible');
+                    }
+                });
+            }, { 
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            scrollElements.forEach(el => elementObserver.observe(el));
+
+            // Smooth scroll untuk navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Update active nav link on scroll
+            const sections = document.querySelectorAll('.page-section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const currentId = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${currentId}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            sections.forEach(section => observer.observe(section));
+        });
+    </script>
+</body>
+</html>
